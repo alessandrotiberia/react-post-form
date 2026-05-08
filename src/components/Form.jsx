@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 //raccogliere dati inseriti da un utente e inviare a un server tramite post
 
@@ -23,11 +23,11 @@ function Form() {
         // Se l'input e' una checkbox, il valore da salvare sara' 'checked' (true/false)
         // Altrimenti, per input di testo e textarea, il valore sara' 'value' (la stringa digitata)
 
-        const value = type === 'checkbox' ? checked : value;
+        const valoreNuovo = type === 'checkbox' ? checked : value;
 
         setPostData({
             ...postData,
-            [name]: value
+            [name]: valoreNuovo,
         });
 
     };
@@ -49,7 +49,7 @@ function Form() {
         //   - body            -> il corpo della richiesta (i dati da inviare).
         //                        fetch vuole una stringa, quindi convertiamo
         //                        l'oggetto JS in JSON con JSON.stringify()
-        
+
         fetch('https://67c5b4f3351c081993fb1ab6.mockapi.io/api/posts', {
             method : 'POST',
             Headers : {
@@ -67,5 +67,58 @@ function Form() {
         console.log(json); // riceve oggetto js con risposta server.
         });          
     
+
+return (
+    <div>
+        <h1>Form post</h1>
+
+        
+        <form onSubmit={handlerSubmit}>
+            <div>
+                <label>autore</label>
+                <input
+                type="text"
+                name="author"
+                value={postData.author}
+                onChange={handlerChange}
+                 />
+            </div>
+
+            <div className="sezione-input">
+                    <label>Titolo:</label>
+                    <input 
+                        type="text" 
+                        name="title" 
+                        value={postData.title} 
+                        onChange={handlerChange} 
+                    />
+                </div>
+
+                <div className="sezione-input">
+                    <label>Testo:</label>
+                    <textarea 
+                        name="body" 
+                        value={postData.body} 
+                        onChange={handlerChange} 
+                    />
+                </div>
+
+                <div className="sezione-input">
+                    <label>
+                        {/* Ripasso HTML: per le checkbox si usa 'checked' al posto di 'value' */}
+                        <input 
+                            type="checkbox" 
+                            name="public" 
+                            checked={postData.public} 
+                            onChange={handlerChange} 
+                        />
+                    </label>
+                </div>
+                <button type="submit">Invia Post</button>
+        </form>
+    </div>
+);
 }
+
+
 export default Form;
